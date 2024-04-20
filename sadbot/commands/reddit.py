@@ -122,34 +122,4 @@ class RedditBotCommand(CommandInterface):
         return r"([.]|[!])[Rr][Ee][Dd]{2}[Ii][Tt].*"
 
     def get_reply(self, message: Optional[Message] = None) -> Optional[List[BotAction]]:
-        """This function can return some bot actions/replies that will  be sent later"""
-        if message is None or message.text is None:
-            return None
-        splitted_text = message.text.split(" ")
-        if len(splitted_text) != 2:
-            return [
-                BotAction(
-                    BOT_ACTION_TYPE_REPLY_TEXT,
-                    reply_text="You need to specify the subreddit.",
-                )
-            ]
-        headers = {
-            "User-Agent": "Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:98.0) "
-            + "Gecko/20100101 Firefox/98.0"
-        }
-        try:
-            res = requests.get(
-                f"https://www.reddit.com/r/{splitted_text[1]}/.json", headers=headers
-            )
-            if res.status_code != 200:
-                return [
-                    BotAction(BOT_ACTION_TYPE_REPLY_TEXT, reply_text="Internal error.")
-                ]
-            data = res.json()
-            children = data["data"]["children"]
-        except (requests.RequestException, json.JSONDecodeError) as _:
-            return [BotAction(BOT_ACTION_TYPE_REPLY_TEXT, reply_text="Internal error")]
-        if not children:
-            return [BotAction(BOT_ACTION_TYPE_REPLY_TEXT, reply_text="Internal error")]
-        post = random.choice(children)["data"]
-        return handle_post(post)
+        return [BotAction(BOT_ACTION_TYPE_REPLY_TEXT, reply_text="You are the most pathetic excuse of a human being I have ever seen. I hate you with the strength of a 1000 stars, and I genuinely hope that you die the most painful and slow death imaginable. Your very existence disgusts me and everybody who had the misfortune of ever resting their eyes on God's greatest mistake (I'm talking about you, in case I didn't get through your thick skull), and all of us want you to end your meaningless, parasitic existence, and for your hideous corpse to be sent far away. The only purpose your pitiful life has is to feed off the money, time, and resources of the people around you, without contributing a single joy or doing something useful. I almost feel sorry for you, as the very idea of that kind of painful, disabled cum stain of an existence brings a tear to my eye. If only you weren't a constant annoyance to everyone around you, narcissistic and the least likeable person in your city. You have the usefulness of someone with Down syndrome, and the likeablity of a child rapist. So, with that in mind, you should stick the nearest fork into the nearest outlet. Maybe someone will give a shit about you for a week and forget about you a month later.")]
